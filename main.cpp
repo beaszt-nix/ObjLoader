@@ -38,9 +38,9 @@ int main(int argc, char *argv[]){
     //glEnable(GL_CULL_FACE);
     glDepthFunc(GL_LESS);
 
-    GLuint shader_id = loadShaders("shaders/vtx_shader.glsl", "shaders/fragment_shader.glsl");
-    GLuint light_id = glGetUniformLocation(shader_id, "LightPosition_worldspace");
-    Object object((const char *)argv[1], (const char *)argv[2], shader_id);
+    Shader shader("shaders/vtx_shader.glsl", "shaders/fragment_shader.glsl");
+    GLuint light_id = shader.getUniformLocation("LightPosition_worldspace");
+    Object object((const char *)argv[1], (const char *)argv[2], shader);
     
     add_camera(glm::vec3(2, 2, 2), 45.0f, window, "main");
     select_camera("main");

@@ -3,9 +3,9 @@
 Object::Object(
           const char * objpath
         , const char * texture
-        , GLuint shader_id)
+        , Shader &shader) 
+        : shader(shader)
 {
-  this->shader_id = shader_id;
   this->texture = loadDDS(texture);
   loadOBJ(objpath);
 
@@ -33,20 +33,20 @@ Object::Object(
       , this->normals.size() * sizeof(glm::vec3)
       , &this->normals[0], GL_STATIC_DRAW);
 
-  glUseProgram(shader_id);
-  this->texture_id = glGetUniformLocation(shader_id, "myTextureSampler");
-  this->mvp_id = glGetUniformLocation(shader_id, "MVP");
-  this->model_id = glGetUniformLocation(shader_id, "M");
-  this->view_id = glGetUniformLocation(shader_id, "V");
+  this->shader.use();
+  this->texture_id = shader.getUniformLocation("myTextureSampler");
+  this->mvp_id = shader.getUniformLocation("MVP");
+  this->model_id = shader.getUniformLocation("M");
+  this->view_id = shader.getUniformLocation("V");
   this->model = glm::mat4(1.0f);
 }
 
 void Object::render_object() {
-    glUseProgram(shader_id);
-    glUniformMatrix4fv(mvp_id, 1, GL_FALSE, &mvp[0][0]);
+    this->shader.use();
+    Shader::putUniformM4(mvp_id, mvp);
 
     glBindTexture(GL_TEXTURE_2D, texture);
-    glUniform1i(texture_id, 0);
+    Shader::putUniform1i(texture_id, 0);
 
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);

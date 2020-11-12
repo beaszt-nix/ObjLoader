@@ -4,10 +4,10 @@ class Shader{
         const char *vtx_shader;
         const char *frag_shader;
     public:
-        Shader(char *, char *);
-        unsigned int getUniformLocation(char *);
-        void putUniformM4(unsigned int, glm::mat4 &);
-        void putUniform3f(unsigned int, float, float, float);
-        void putUniform1i(unsigned int, int);
+        Shader(const char *,const char *);
+        unsigned int getUniformLocation(const char *);
+        static void putUniformM4(unsigned int, glm::mat4 &);
+        static void putUniform3f(unsigned int, float , float , float );
+        static void putUniform1i(unsigned int, int );
         void use();
 };

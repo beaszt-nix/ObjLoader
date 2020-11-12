@@ -57,10 +57,13 @@ void Camera::get_vectors(){
 
 void camera_mouse_callback(GLFWwindow *window, double xpos, double ypos)
 {
+  int width, height;
   Camera *current = get_current_camera();
-  current->horizontalAngle += current->lookSpeed * current->deltaTime * float(400.0f - xpos);
-  current->verticalAngle += current->lookSpeed * current->deltaTime * float(300.0f - ypos);
-  glfwSetCursorPos(current->window, 800.0f/2.0f, 600.0f/2.0f);
+  glfwGetWindowSize(current->window, &width, &height);
+  float mid_width = (float)width/2.0f, mid_height = (float)height/2.0f;
+  current->horizontalAngle += current->lookSpeed * current->deltaTime * float(mid_width - xpos);
+  current->verticalAngle += current->lookSpeed * current->deltaTime * float(mid_height- ypos);
+  glfwSetCursorPos(current->window, mid_width, mid_height);
 }
 
 void camera_scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
@@ -107,9 +110,9 @@ void Camera::render_view(Object & obj, GLuint light_id)
   struct model input = obj.get_ids();
   glm::mat4 result = projection * view * input.model;
 
-  glUniformMatrix4fv(input.model_matrix_id, 1, GL_FALSE, &input.model[0][0]);
-  glUniformMatrix4fv(input.view_matrix_id, 1, GL_FALSE, &view[0][0]);
-  glUniform3f(light_id, lightPos.x, lightPos.y, lightPos.z);
+  Shader::putUniformM4(input.model_matrix_id, input.model);
+  Shader::putUniformM4(input.view_matrix_id, view);
+  Shader::putUniform3f(light_id, lightPos.x, lightPos.y, lightPos.z);
   obj.set_mvp(result);
   return;
 }

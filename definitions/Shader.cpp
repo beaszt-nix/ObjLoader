@@ -1,6 +1,6 @@
 #include "../headers/common.h"
 
-Shader::Shader(char * vtx_shader, char * frag_shader){
+Shader::Shader(const char * vtx_shader, const char * frag_shader){
     this->shader_id = loadShaders(vtx_shader, frag_shader);
     this->vtx_shader = vtx_shader;
     this->frag_shader = frag_shader;
@@ -8,7 +8,7 @@ Shader::Shader(char * vtx_shader, char * frag_shader){
 void Shader::use(){
     glUseProgram(shader_id);
 }
-unsigned int Shader::getUniformLocation(char *name){
+unsigned int Shader::getUniformLocation(const char *name){
     return glGetUniformLocation(shader_id, name);
 }
 void Shader::putUniformM4(unsigned int loc, glm::mat4 &mat){

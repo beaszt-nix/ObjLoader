@@ -92,6 +92,5 @@ bool Object::loadOBJ( const char * path ){
     	this->normals.push_back(normal);
 	}
 	fclose(file);
-	printf("Loaded OBJ FILE\n");
 	return true;
 }

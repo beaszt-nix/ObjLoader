@@ -88,6 +88,5 @@ GLuint Object::loadDDS(const char * imagepath){
 	} 
 
 	free(buffer); 
-	printf("Loaded DDS Texture\n");
 	return textureID;
 }

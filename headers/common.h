@@ -11,7 +11,7 @@
 
 #define FPS 30.0f
 #define LOOK_SPEED 0.05f
-#define MOVE_SPEED 30.0f
+#define MOVE_SPEED 25.0f
 
 
 GLuint loadShaders(const char *, const char *);
