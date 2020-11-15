@@ -8,6 +8,8 @@
 #define FOURCC_DXT5 0x35545844 
 
 GLuint Object::loadDDS(const char * imagepath){
+	if (imagepath == NULL)
+		return 0;
 	unsigned char header[124];
 	FILE *fp; 
 

@@ -29,4 +29,5 @@ class Camera {
     Camera(const Camera &);
     void reset();
     void render_view(Object &, GLuint);
+    void render_sky(Skybox &);
 };

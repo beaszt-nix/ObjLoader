@@ -6,12 +6,15 @@
 #include <glm/gtx/scalar_multiplication.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Shader.h"
+#include "Skybox.h"
 #include "Object.h"
 #include "Camera.h"
+#include "TextBox.h"
+
 
 #define FPS 30.0f
 #define LOOK_SPEED 0.05f
-#define MOVE_SPEED 25.0f
+#define MOVE_SPEED 30.0f
 
 
 GLuint loadShaders(const char *, const char *);

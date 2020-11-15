@@ -16,12 +16,14 @@ private:
   glm::mat4 model, mvp;
   Shader &shader;
 
+protected:
   bool loadOBJ(const char *objpath);
-  GLuint loadDDS(const char *imagepath);
 
 public:
   Object(const char *, const char *, Shader &);
+  Object(Shader &);
   struct model get_ids();
   void set_mvp(glm::mat4 result);
-  void render_object();
+  static GLuint loadDDS(const char *imagepath);
+  void render_object(void);
 };

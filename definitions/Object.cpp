@@ -1,5 +1,10 @@
 #include "../headers/common.h"
 
+Object::Object(Shader &shader)
+:shader(shader){
+  return;
+}
+
 Object::Object(
           const char * objpath
         , const char * texture

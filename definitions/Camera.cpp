@@ -105,14 +105,42 @@ void Camera::render_view(Object & obj, GLuint light_id)
         position+direction,
         up
       );
+
   glm::vec3 lightPos = glm::vec3(6,6,6);
 
   struct model input = obj.get_ids();
+  
+  //glm::mat4 nview = glm::mat4(glm::mat3(view));
   glm::mat4 result = projection * view * input.model;
 
   Shader::putUniformM4(input.model_matrix_id, input.model);
   Shader::putUniformM4(input.view_matrix_id, view);
   Shader::putUniform3f(light_id, lightPos.x, lightPos.y, lightPos.z);
   obj.set_mvp(result);
+  return;
+}
+
+
+void Camera::render_sky(Skybox & obj)
+{
+  glfwSetCursorPosCallback(window, camera_mouse_callback);
+  glfwSetScrollCallback(window, camera_scroll_callback);  
+  glfwSetKeyCallback(window, camera_key_callback);
+  
+
+  get_vectors();
+  glm::mat4 projection = glm::perspective(glm::radians(float(field_of_view)), 4.0f/3.0f, 0.1f, 100.0f);
+  glm::mat4 view = glm::lookAt(
+        position,
+        position+direction,
+        up
+      );
+  glm::mat4 nvew = glm::mat4(glm::mat3(view));
+
+  std::vector<GLuint> input = obj.get_ids();
+
+  Shader::putUniformM4(input[0], nvew);
+  Shader::putUniformM4(input[1], projection);
+
   return;
 }

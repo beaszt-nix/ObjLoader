@@ -45,7 +45,8 @@ GLuint loadShaders(const char * vertex_file_path, const char * fragment_file_pat
   if (info_len > 0) {
     std :: vector<char> vtx_shader_err(info_len + 1);
     glGetShaderInfoLog(vtx_shader_id, info_len, NULL, &vtx_shader_err[0]);
-    printf("%s\n", &vtx_shader_err[0]);
+    printf("vertex: %s\n", &vtx_shader_err[0]);
+    exit(-1);
   }
 
   printf("Compiling Shader : %s\n", fragment_file_path);
@@ -58,7 +59,8 @@ GLuint loadShaders(const char * vertex_file_path, const char * fragment_file_pat
   if (info_len > 0) {
     std :: vector<char> vtx_shader_err(info_len + 1);
     glGetShaderInfoLog(vtx_shader_id, info_len, NULL, &vtx_shader_err[0]);
-    printf("%s\n", &vtx_shader_err[0]);
+    printf("fragment: %s\n", &vtx_shader_err[0]);
+    exit(-1);
   }
 
   printf("Linking Program \n");
