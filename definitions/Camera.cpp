@@ -108,9 +108,9 @@ void Camera::render_view(Object & obj)
         up
       );
 
-  glm::vec3 lightPos = glm::vec3(6,6,6);
-
   struct model input = obj.get_ids();
+  glm::vec3 lightPos = glm::vec3(0,5,0) + direction + position;
+
   
   //glm::mat4 nview = glm::mat4(glm::mat3(view));
   glm::mat4 result = projection * view * input.model;

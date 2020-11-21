@@ -115,3 +115,19 @@ struct model Object::get_ids(){
 void Object::set_mvp(glm::mat4 result){
   this->mvp = result;
 }
+
+void Object::rotateX(float angle){
+  this->model = glm::rotate(model, glm::radians(angle), glm::vec3(0,0,1.0f));
+}
+
+void Object::rotateY(float angle){
+  this->model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f,0,0));
+}
+
+void Object::rotateZ(float angle){
+  this->model = glm::rotate(model, glm::radians(angle), glm::vec3(0,1.0f,0));
+}
+
+void Object::reset_model(){
+  this->model = glm::mat4(1.0f);
+}

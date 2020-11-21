@@ -27,4 +27,8 @@ public:
   void set_mvp(glm::mat4 result);
   static GLuint loadDDS(const char *imagepath);
   void render_object(void);
+  void rotateX(float);
+  void rotateY(float);
+  void rotateZ(float);
+  void reset_model();
 };

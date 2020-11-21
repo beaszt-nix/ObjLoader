@@ -2,8 +2,9 @@
 #include <cstdlib>
 #include <iostream>
 
-bool showMenu;
+bool showMenu, rotate;
 TextBox *input;
+Object *selected;
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
@@ -11,12 +12,12 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 }
 
 std::vector<std::string> faces = {
-    "models/skybox/Lycksele/posx.jpg",
-    "models/skybox/Lycksele/negx.jpg",
-    "models/skybox/Lycksele/negy.jpg",
-    "models/skybox/Lycksele/posy.jpg",
-    "models/skybox/Lycksele/posz.jpg",
-    "models/skybox/Lycksele/negz.jpg"
+    "models/skybox/Skybox/posx.jpg",
+    "models/skybox/Skybox/negx.jpg",
+    "models/skybox/Skybox/negy.jpg",
+    "models/skybox/Skybox/posy.jpg",
+    "models/skybox/Skybox/posz.jpg",
+    "models/skybox/Skybox/negz.jpg"
 };
 
 void processInput(GLFWwindow *window)
@@ -31,6 +32,11 @@ void processInput(GLFWwindow *window)
     showMenu = false;
     glfwSetKeyCallback(window, NULL);
     glfwSetCharCallback(window, NULL);
+  }
+  if (glfwGetKey(window, GLFW_KEY_BACKSPACE) == GLFW_PRESS){
+    if (rotate)
+      glfwSetKeyCallback(window, NULL);
+    rotate ^= true;
   }
 }
 
@@ -49,6 +55,21 @@ void text_key_callback(GLFWwindow *window, int key, int scancode, int action, in
     input->space();    
 }
 
+void object_key_callback(GLFWwindow *window, int key, int scancode, int action, int mods){
+  if (key == GLFW_KEY_RIGHT && action == GLFW_REPEAT)
+    selected->rotateX(5);
+  if (key == GLFW_KEY_LEFT && action == GLFW_REPEAT)
+    selected->rotateX(-5);
+  if (key == GLFW_KEY_UP && mods == 0 && action == GLFW_REPEAT)
+    selected->rotateY(5);
+  if (key == GLFW_KEY_DOWN && mods == 0 && action == GLFW_REPEAT)
+    selected->rotateY(-5);
+  if (key == GLFW_KEY_UP && mods == GLFW_MOD_SUPER && action == GLFW_REPEAT)
+    selected->rotateZ(5);
+  if (key == GLFW_KEY_DOWN && mods == GLFW_MOD_SUPER && action == GLFW_REPEAT)
+    selected->rotateZ(-5);
+}
+
 void text_char_callback(GLFWwindow *window, unsigned int code){
   if (isprint(code))
     input->put_char((unsigned char)code);
@@ -57,6 +78,7 @@ void text_char_callback(GLFWwindow *window, unsigned int code){
 int main(int argc, char *argv[])
 {
   showMenu = false;
+  rotate = false;
   std ::string input = "The following commands can be used.\n:l model_location texture_location\n:a new_camera_name\n:e for exit\nAAAAAAA";
   
   glfwInit();
@@ -84,6 +106,7 @@ int main(int argc, char *argv[])
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
   glEnable(GL_DEPTH_TEST);
+  glEnable(GL_DEPTH_CLAMP);
 
   Object object((const char *)argv[1], (const char *)argv[2], "shaders/vtx_shader.glsl", "shaders/fragment_shader.glsl");
   Skybox skybox(faces);
@@ -94,7 +117,7 @@ int main(int argc, char *argv[])
   select_camera("main");
 
   Camera *current = get_current_camera();
-
+  selected = &object;
   while (!glfwWindowShouldClose(window))
   {
     processInput(window);
@@ -104,12 +127,16 @@ int main(int argc, char *argv[])
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    
     //Render Object
-    
     current->render_view(object);
     object.render_object();
     
     current->render_sky(skybox);
     skybox.render_sky();
+
+    // Rotate Object
+    if (rotate){
+      glfwSetKeyCallback(window, object_key_callback);
+    }
 
     // Input Box
     if (showMenu){

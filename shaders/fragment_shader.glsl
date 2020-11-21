@@ -14,7 +14,7 @@ uniform vec3 LightPosition_worldspace;
 
 void main(){
   vec3 LightColor = vec3(1,1,1);
-  float lightPower = 100.0f;
+  float lightPower = 70.0f;
   
   vec3 MaterialDiffuseColor = texture(myTextureSampler, UV).rgb;
   vec3 MatrerialAmbientColor = vec3(0.1,0.1,0.1) * MaterialDiffuseColor;
