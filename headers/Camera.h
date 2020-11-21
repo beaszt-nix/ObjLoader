@@ -28,6 +28,6 @@ class Camera {
         , GLFWwindow *window);
     Camera(const Camera &);
     void reset();
-    void render_view(Object &, GLuint);
+    void render_view(Object &);
     void render_sky(Skybox &);
 };

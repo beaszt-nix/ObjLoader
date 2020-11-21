@@ -5,6 +5,12 @@ Shader::Shader(const char * vtx_shader, const char * frag_shader){
     this->vtx_shader = vtx_shader;
     this->frag_shader = frag_shader;
 }
+Shader::Shader(void){
+    shader_id = 0;
+    vtx_shader =  NULL;
+    frag_shader = NULL;
+}
+
 void Shader::use(){
     glUseProgram(shader_id);
 }

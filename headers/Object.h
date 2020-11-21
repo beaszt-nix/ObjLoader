@@ -6,6 +6,7 @@ private:
       model_id,
       view_id,
       texture,
+      light_id,
       VAO,
       VBO,
       UVBuffer,
@@ -14,13 +15,13 @@ private:
   std ::vector<glm::vec2> uvs;
   std ::vector<glm::vec3> normals;
   glm::mat4 model, mvp;
-  Shader &shader;
 
 protected:
   bool loadOBJ(const char *objpath);
 
 public:
-  Object(const char *, const char *, Shader &);
+  Shader shader;
+  Object(const char *, const char *, const char *, const char *);
   Object(Shader &);
   struct model get_ids();
   void set_mvp(glm::mat4 result);

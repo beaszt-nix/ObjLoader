@@ -5,11 +5,11 @@ class TextBox{
         GLuint vertex_buffer_id;
         GLuint uv_buffer_id;
         GLuint uniform_id;
-        Shader &shader;
         int cursor;
         int size;
     public:
-        TextBox(const char *, Shader &, int=32);
+        Shader shader;
+        TextBox(const char *, int=32);
         void put_text(std::string &s);
         void put_char(char);
         void move_cursor(int);

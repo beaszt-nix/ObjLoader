@@ -11,12 +11,12 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 }
 
 std::vector<std::string> faces = {
-    "models/skybox/Skybox/posx.jpg",
-    "models/skybox/Skybox/negx.jpg",
-    "models/skybox/Skybox/negy.jpg",
-    "models/skybox/Skybox/posy.jpg",
-    "models/skybox/Skybox/posz.jpg",
-    "models/skybox/Skybox/negz.jpg"
+    "models/skybox/Lycksele/posx.jpg",
+    "models/skybox/Lycksele/negx.jpg",
+    "models/skybox/Lycksele/negy.jpg",
+    "models/skybox/Lycksele/posy.jpg",
+    "models/skybox/Lycksele/posz.jpg",
+    "models/skybox/Lycksele/negz.jpg"
 };
 
 void processInput(GLFWwindow *window)
@@ -57,6 +57,8 @@ void text_char_callback(GLFWwindow *window, unsigned int code){
 int main(int argc, char *argv[])
 {
   showMenu = false;
+  std ::string input = "The following commands can be used.\n:l model_location texture_location\n:a new_camera_name\n:e for exit\nAAAAAAA";
+  
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -82,34 +84,16 @@ int main(int argc, char *argv[])
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
   glEnable(GL_DEPTH_TEST);
-  //glEnable(GL_CULL_FACE);
-  glDepthFunc(GL_LESS);
 
-  Shader shader("shaders/vtx_shader.glsl", "shaders/fragment_shader.glsl");
-  Shader text_shader("shaders/text_vtx_shader.glsl", "shaders/text_frag_shader.glsl");
-  Shader sky_shader("shaders/skybox_vtx_shader.glsl", "shaders/skybox_frag_shader.glsl");
+  Object object((const char *)argv[1], (const char *)argv[2], "shaders/vtx_shader.glsl", "shaders/fragment_shader.glsl");
+  Skybox skybox(faces);
 
-  GLuint light_id = shader.getUniformLocation("LightPosition_worldspace");
+  TextBox text("models/font.dds", 12);
 
-  Object object((const char *)argv[1], (const char *)argv[2], shader);
-  Skybox skybox(faces, sky_shader);
-
-  TextBox text("models/font.dds", text_shader, 12);
-  input = &text;
-
-  add_camera(glm::vec3(0, 0, 5), 20.0f, window, "main");
+  add_camera(glm::vec3(0, 0, 5), 70.0f, window, "main");
   select_camera("main");
 
   Camera *current = get_current_camera();
-
-  if (current != NULL)
-    printf("Camera Fetched\n");
-  else
-  {
-    perror("Camera couldn't load");
-    exit(-1);
-  }
-  std ::string input = "The following commands can be used.\n:l model_location texture_location\n:a new_camera_name\n:e for exit\nAAAAAAA";
 
   while (!glfwWindowShouldClose(window))
   {
@@ -118,6 +102,14 @@ int main(int argc, char *argv[])
     // Render red background
     glClearColor(0.3f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   
+    //Render Object
+    
+    current->render_view(object);
+    object.render_object();
+    
+    current->render_sky(skybox);
+    skybox.render_sky();
 
     // Input Box
     if (showMenu){
@@ -125,17 +117,6 @@ int main(int argc, char *argv[])
       text.print_multi_string(20, 550, input);
     }
 
-    // Render Object
-    else{
-      //shader.use();
-      //current->render_view(object, light_id);
-      //object.render_object();
-
-      sky_shader.use();
-      current->render_sky(skybox);
-      skybox.render_sky();
-    }
-    
     // Buffer management
     glfwSwapBuffers(window);
     glfwPollEvents();

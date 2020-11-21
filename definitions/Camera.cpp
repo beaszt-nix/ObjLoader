@@ -91,8 +91,10 @@ void camera_key_callback(GLFWwindow *window, int key, int scancode, int action, 
     current->reset();
 }
 
-void Camera::render_view(Object & obj, GLuint light_id)
+void Camera::render_view(Object & obj)
 {
+  Shader &val = obj.shader;
+  val.use();
   glfwSetCursorPosCallback(window, camera_mouse_callback);
   glfwSetScrollCallback(window, camera_scroll_callback);  
   glfwSetKeyCallback(window, camera_key_callback);
@@ -115,7 +117,7 @@ void Camera::render_view(Object & obj, GLuint light_id)
 
   Shader::putUniformM4(input.model_matrix_id, input.model);
   Shader::putUniformM4(input.view_matrix_id, view);
-  Shader::putUniform3f(light_id, lightPos.x, lightPos.y, lightPos.z);
+  Shader::putUniform3f(input.light_id, lightPos.x, lightPos.y, lightPos.z);
   obj.set_mvp(result);
   return;
 }
@@ -123,6 +125,8 @@ void Camera::render_view(Object & obj, GLuint light_id)
 
 void Camera::render_sky(Skybox & obj)
 {
+  Shader &val = obj.shader;
+  val.use();
   glfwSetCursorPosCallback(window, camera_mouse_callback);
   glfwSetScrollCallback(window, camera_scroll_callback);  
   glfwSetKeyCallback(window, camera_key_callback);
@@ -135,11 +139,10 @@ void Camera::render_sky(Skybox & obj)
         position+direction,
         up
       );
-  glm::mat4 nvew = glm::mat4(glm::mat3(view));
 
   std::vector<GLuint> input = obj.get_ids();
 
-  Shader::putUniformM4(input[0], nvew);
+  Shader::putUniformM4(input[0], view);
   Shader::putUniformM4(input[1], projection);
 
   return;

@@ -33,5 +33,6 @@ struct model {
   glm::mat4 model;
   GLuint  model_matrix_id
         , view_matrix_id
-        , result_id;
+        , result_id
+        , light_id;
 };

@@ -1,9 +1,10 @@
 #include "../headers/common.h"
 #include <sstream>
 
-TextBox::TextBox(const char *texture, Shader &shader, int size):
-shader(shader)
-,size(size){
+TextBox::TextBox(const char *texture, int size)
+:size(size){
+    this->shader = Shader("shaders/text_vtx_shader.glsl", "shaders/text_frag_shader.glsl");
+    shader.use();
     cursor = -1;
     texture_id = Object::loadDDS(texture);
     glGenBuffers(1, &vertex_buffer_id);

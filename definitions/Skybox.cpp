@@ -121,10 +121,10 @@ unsigned int Skybox::loadCubemap(){
     return texture_id;
 }
 
-Skybox::Skybox(const std::vector<std::string> &faces, Shader &shader)
+Skybox::Skybox(const std::vector<std::string> &faces)
 : faces(faces)
-, shader(shader)
 {
+    this->shader = Shader("shaders/skybox_vtx_shader.glsl", "shaders/skybox_frag_shader.glsl");
     vertices = {
         -1.0f,  1.0f, -1.0f,
         -1.0f, -1.0f, -1.0f,
@@ -178,27 +178,26 @@ Skybox::Skybox(const std::vector<std::string> &faces, Shader &shader)
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
     
+    this->shader.use();
     this->texture = loadCubemap();
-    shader.use();
     this->texture_id  = shader.getUniformLocation("skybox");
     shader.putUniform1i(this->texture_id, 0);
     
     this->view_id = shader.getUniformLocation("view");
     this->proj_id = shader.getUniformLocation("projection");
+    glUseProgram(0);
 }
 
 void Skybox::render_sky(){
     glDepthFunc(GL_LEQUAL);
-    shader.use();
-
     glBindVertexArray(VAO);
     glActiveTexture(GL_TEXTURE0);
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     
-    glDepthFunc(GL_LESS);  
     glBindVertexArray(0);
+    glDepthFunc(GL_LESS);
 }
 
 std::vector<GLuint> Skybox::get_ids(){

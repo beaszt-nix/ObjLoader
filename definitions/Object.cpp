@@ -8,9 +8,13 @@ Object::Object(Shader &shader)
 Object::Object(
           const char * objpath
         , const char * texture
-        , Shader &shader) 
-        : shader(shader)
+        , const char * vtx_shader
+        , const char * frag_shader
+        )
 {
+  this->shader = Shader(vtx_shader, frag_shader);
+
+  this->shader.use();
   this->texture = loadDDS(texture);
   loadOBJ(objpath);
 
@@ -38,21 +42,23 @@ Object::Object(
       , this->normals.size() * sizeof(glm::vec3)
       , &this->normals[0], GL_STATIC_DRAW);
 
-  this->shader.use();
   this->texture_id = shader.getUniformLocation("myTextureSampler");
   this->mvp_id = shader.getUniformLocation("MVP");
   this->model_id = shader.getUniformLocation("M");
   this->view_id = shader.getUniformLocation("V");
+  this->light_id = shader.getUniformLocation("LightPosition_worldspace");
   this->model = glm::mat4(1.0f);
+  glUseProgram(0);
 }
 
 void Object::render_object() {
-    this->shader.use();
+    glBindVertexArray(VAO);
     Shader::putUniformM4(mvp_id, mvp);
 
     glBindTexture(GL_TEXTURE_2D, texture);
     Shader::putUniform1i(texture_id, 0);
 
+    glDepthFunc(GL_LESS);
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glVertexAttribPointer(
@@ -91,6 +97,9 @@ void Object::render_object() {
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(2);
+
+    glBindVertexArray(0);
+
 }
 
 struct model Object::get_ids(){
@@ -99,6 +108,7 @@ struct model Object::get_ids(){
   item.model_matrix_id = model_id;
   item.view_matrix_id = view_id;
   item.result_id = mvp_id;
+  item.light_id = light_id;
   return item;
 }
 
