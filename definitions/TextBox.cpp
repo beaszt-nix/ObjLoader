@@ -7,6 +7,7 @@ TextBox::TextBox(const char *texture, int size)
     shader.use();
     cursor = -1;
     texture_id = Object::loadDDS(texture);
+    glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &vertex_buffer_id);
     glGenBuffers(1, &uv_buffer_id);
     uniform_id = shader.getUniformLocation("myTextureSampler");
@@ -31,14 +32,14 @@ void TextBox::display_content(int x, int y){
         vertices.push_back(vtx_dl);
 
         char letter = text[i];
-        float uv_x, uv_y, offset= 1.0f/16.0f;
+        float uv_x, uv_y, xoffset= 1.0f/20.0f, yoffset= 1.0f/16.0f;
         uv_x = (letter % 16) / 16.0f;
         uv_y = (letter / 16) / 16.0f;
 
         glm::vec2 uv_tl = glm::vec2(uv_x, uv_y);
-        glm::vec2 uv_tr = glm::vec2(uv_x + offset, uv_y);
-        glm::vec2 uv_dr = glm::vec2(uv_x + offset, uv_y + offset);
-        glm::vec2 uv_dl = glm::vec2(uv_x, uv_y + offset);
+        glm::vec2 uv_tr = glm::vec2(uv_x + xoffset, uv_y);
+        glm::vec2 uv_dr = glm::vec2(uv_x + xoffset, uv_y + yoffset);
+        glm::vec2 uv_dl = glm::vec2(uv_x, uv_y + yoffset);
 
         uvs.push_back(uv_tl);
         uvs.push_back(uv_dl);
@@ -59,6 +60,7 @@ void TextBox::display_content(int x, int y){
         glBindTexture(GL_TEXTURE_2D, texture_id);
         glUniform1i(uniform_id, 0);
 
+        glBindVertexArray(VAO);
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id);
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void *)0);
@@ -75,6 +77,7 @@ void TextBox::display_content(int x, int y){
 
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
+        glBindVertexArray(0);
     }
 }
 

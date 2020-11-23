@@ -3,6 +3,7 @@ class TextBox{
         std::string text;
         GLuint texture_id;
         GLuint vertex_buffer_id;
+        GLuint VAO;
         GLuint uv_buffer_id;
         GLuint uniform_id;
         int cursor;

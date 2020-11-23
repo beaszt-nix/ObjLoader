@@ -87,8 +87,6 @@ void camera_key_callback(GLFWwindow *window, int key, int scancode, int action, 
     current->position += current->right * current->deltaTime * current->moveSpeed;
   if (key == GLFW_KEY_A && (action == GLFW_REPEAT || action == GLFW_PRESS) )
     current->position -= current->right * current->deltaTime * current->moveSpeed;
-  if (key == GLFW_KEY_R && action == GLFW_PRESS)
-    current->reset();
 }
 
 void Camera::render_view(Object & obj)
@@ -101,7 +99,7 @@ void Camera::render_view(Object & obj)
   
 
   get_vectors();
-  glm::mat4 projection = glm::perspective(glm::radians(float(field_of_view)), 4.0f/3.0f, 0.1f, 100.0f);
+  glm::mat4 projection = glm::perspective(glm::radians(float(field_of_view)), 16.0f/9.0f, 0.1f, 100.0f);
   glm::mat4 view = glm::lookAt(
         position,
         position+direction,
@@ -133,7 +131,7 @@ void Camera::render_sky(Skybox & obj)
   
 
   get_vectors();
-  glm::mat4 projection = glm::perspective(glm::radians(float(field_of_view)), 4.0f/3.0f, 0.1f, 100.0f);
+  glm::mat4 projection = glm::perspective(glm::radians(float(field_of_view)), 16.0f/9.0f, 0.1f, 100.0f);
   glm::mat4 view = glm::lookAt(
         position,
         position+direction,
