@@ -32,3 +32,6 @@ g++ definitions/* loaders/* glad.c main.cpp -o app -lGL -lGLU -lX11 -ldl -lglfw 
 #To execute
 ./app models/IIITM_LOGO.obj models/IIITM_UV_MAP.dds
 ```
+
+# Controls
+![Menu Screen](/models/menu_screen.png)
